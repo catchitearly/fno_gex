@@ -2,13 +2,24 @@ import datetime as dt
 from src.black_scholes import implied_vol, gamma as bs_gamma
 
 
-def _years_to_expiry(expiry_epoch_or_str):
-    """Fyers expiryData entries typically expose an epoch timestamp under 'expiry'."""
+def _years_to_expiry(expiry_value):
+    """
+    Fyers expiryData entries expose the expiry as an epoch timestamp -- but as a
+    numeric STRING (e.g. "1785232800"), not an int/float, and not a dd-mm-yyyy
+    string. Handle all three shapes defensively since Fyers has been inconsistent
+    about this across SDK versions.
+    """
     now = dt.datetime.now()
-    if isinstance(expiry_epoch_or_str, (int, float)):
-        expiry_dt = dt.datetime.fromtimestamp(expiry_epoch_or_str)
+
+    if isinstance(expiry_value, (int, float)):
+        expiry_dt = dt.datetime.fromtimestamp(expiry_value)
     else:
-        expiry_dt = dt.datetime.strptime(str(expiry_epoch_or_str), "%d-%m-%Y")
+        s = str(expiry_value).strip()
+        if s.isdigit():
+            expiry_dt = dt.datetime.fromtimestamp(int(s))
+        else:
+            expiry_dt = dt.datetime.strptime(s, "%d-%m-%Y")
+
     days = max((expiry_dt - now).total_seconds() / 86400.0, 0.25)  # floor to avoid T=0
     return days / 365.0
 

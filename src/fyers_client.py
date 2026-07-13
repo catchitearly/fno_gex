@@ -23,7 +23,14 @@ class FyersClient:
         resp = self.fyers.quotes({"symbols": equity_symbol})
         if resp.get("s") != "ok" or not resp.get("d"):
             raise RuntimeError(f"Quote fetch failed for {equity_symbol}: {resp}")
-        return float(resp["d"][0]["v"]["lp"])
+        v = resp["d"][0].get("v", {})
+        lp = v.get("lp")
+        if lp is None:
+            raise RuntimeError(
+                f"Quote for {equity_symbol} missing 'lp' field. "
+                f"Full response: {resp}"
+            )
+        return float(lp)
 
     def get_option_chain(self, equity_symbol: str, strike_count: int):
         resp = self.fyers.optionchain(
