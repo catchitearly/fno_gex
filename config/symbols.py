@@ -30,7 +30,7 @@ SYMBOLS = [
     {"name": "MARUTI",      "equity_symbol": "NSE:MARUTI-EQ",      "lot_size": 50},
     {"name": "M&M",         "equity_symbol": "NSE:M&M-EQ",         "lot_size": 350},
     {"name": "SUNPHARMA",   "equity_symbol": "NSE:SUNPHARMA-EQ",   "lot_size": 350},
-    {"name": "TATAMOTORS",  "equity_symbol": "NSE:TATAMOTORS-EQ",  "lot_size": 800},
+   
     {"name": "TATASTEEL",   "equity_symbol": "NSE:TATASTEEL-EQ",   "lot_size": 4250},
     {"name": "ADANIENT",    "equity_symbol": "NSE:ADANIENT-EQ",    "lot_size": 300},
     {"name": "ADANIPORTS",  "equity_symbol": "NSE:ADANIPORTS-EQ",  "lot_size": 500},
