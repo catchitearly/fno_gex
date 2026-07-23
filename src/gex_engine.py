@@ -74,6 +74,12 @@ def compute_gex(chain_data: dict, spot: float, risk_free_rate: float, lot_size: 
         per_strike_gex[K] = call_gex + put_gex
 
     net_gex = sum(per_strike_gex.values())
+    gross_gex = sum(abs(v) for v in per_strike_gex.values())
+    # Scale-invariant tilt: -1 = fully put-dominated/negative gamma, +1 = fully call-dominated/positive gamma.
+    # This stays meaningful regardless of stock size or how close expiry is (raw NetGEX rupee
+    # magnitude balloons as expiry approaches since gamma ~ 1/sqrt(T), so an absolute threshold
+    # on net_gex alone drifts out of calibration -- this ratio doesn't).
+    gex_ratio = (net_gex / gross_gex) if gross_gex > 0 else 0.0
 
     # --- Flip line: strike where cumulative GEX (sorted by strike) crosses zero ---
     sorted_strikes = sorted(per_strike_gex.keys())
@@ -107,6 +113,7 @@ def compute_gex(chain_data: dict, spot: float, risk_free_rate: float, lot_size: 
 
     return {
         "net_gex": net_gex,
+        "gex_ratio": gex_ratio,
         "flip_line": flip_line,
         "distance_to_flip_pct": distance_to_flip_pct,
         "atm_iv": atm_iv,

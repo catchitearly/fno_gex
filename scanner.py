@@ -25,7 +25,7 @@ def format_signal1_message(sym_name, curr):
     return (
         f"⚡ *Negative Gamma Breakdown — {sym_name}*\n"
         f"Spot: {curr['spot']:.2f}\n"
-        f"NetGEX: {curr['net_gex']:,.0f}\n"
+        f"NetGEX: {curr['net_gex']:,.0f} (ratio: {curr['gex_ratio']:.2f})\n"
         f"FlipLine: {curr['flip_line']:.2f}\n"
         f"DistanceToFlip: {curr['distance_to_flip_pct']:.2f}%\n"
         f"→ Dealers likely short-hedging into weakness. Consider NTM puts / bear put spread."
@@ -79,7 +79,8 @@ def main():
 
             new_state[name] = result
             print(f"[{name}] spot={spot:.2f} netgex={result['net_gex']:,.0f} "
-                  f"flip={result['flip_line']:.2f} dist={result['distance_to_flip_pct']:.2f}%")
+                  f"ratio={result['gex_ratio']:.2f} flip={result['flip_line']:.2f} "
+                  f"dist={result['distance_to_flip_pct']:.2f}%")
 
         except Exception as e:
             print(f"[{name}] ERROR: {e}", file=sys.stderr)

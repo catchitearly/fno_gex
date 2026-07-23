@@ -3,12 +3,12 @@ from config import settings
 
 def check_negative_gamma_breakdown(prev: dict, curr: dict) -> bool:
     """
-    Signal 1: NetGEX heavily negative AND spot crosses below the flip line
+    Signal 1: NetGEX ratio heavily negative AND spot crosses below the flip line
     (DistanceToFlip% goes from >=0 to <0) since the previous scan.
     """
     if prev is None:
         return False
-    if curr["net_gex"] > settings.NETGEX_NEGATIVE_THRESHOLD:
+    if curr["gex_ratio"] > settings.GEX_RATIO_NEGATIVE_THRESHOLD:
         return False
     prev_dist = prev.get("distance_to_flip_pct")
     curr_dist = curr.get("distance_to_flip_pct")

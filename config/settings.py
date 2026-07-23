@@ -10,8 +10,11 @@ RISK_FREE_RATE = 0.065     # ~ India 91-day T-bill approx, used in BS IV/gamma c
 EXPIRY_INDEX = 0           # 0 = nearest expiry returned by Fyers option chain
 
 # --- Signal 1: Negative Gamma Breakdown ---
-NETGEX_NEGATIVE_THRESHOLD = -5e6   # NetGEX must be below this (heavily negative) to qualify
-# fires when DistanceToFlip% crosses from >=0 to <0 AND NetGEX <= NETGEX_NEGATIVE_THRESHOLD
+# Ratio-based, not an absolute rupee cutoff: raw NetGEX magnitude balloons as expiry
+# approaches (gamma ~ 1/sqrt(T)), so a fixed rupee threshold drifts out of calibration
+# within days. -1 = fully negative-gamma tilted, 0 = balanced, +1 = fully positive-gamma tilted.
+GEX_RATIO_NEGATIVE_THRESHOLD = -0.15   # NetGEX ratio must be below this to qualify as "heavily negative"
+# fires when DistanceToFlip% crosses from >=0 to <0 AND gex_ratio <= GEX_RATIO_NEGATIVE_THRESHOLD
 
 # --- Signal 2: Call-Squeeze Breakout ---
 MIN_SPOT_CHANGE_PCT = 0.15     # spot must have risen at least this % since last scan
